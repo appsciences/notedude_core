@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm install --ignore-scripts
+      - name: Validate package metadata
+        run: npm pkg get name version exports
+      - name: Unit and integration tests
+        run: npm test
+
+  detect-e2e:
+    runs-on: ubuntu-latest
+    outputs:
+      available: ${{ steps.detect.outputs.available }}
+      directory: ${{ steps.detect.outputs.directory }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: detect
+        shell: bash
+        run: |
+          if [ -f apps/e2e/package.json ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+            echo "directory=apps/e2e" >> "$GITHUB_OUTPUT"
+          elif [ -f e2e/package.json ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+            echo "directory=e2e" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "directory=." >> "$GITHUB_OUTPUT"
+          fi
+
+  e2e:
+    needs: detect-e2e
+    if: needs.detect-e2e.outputs.available == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ needs.detect-e2e.outputs.directory }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npx playwright install --with-deps
+      - run: npx playwright test
