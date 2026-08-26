@@ -1,0 +1,17 @@
+{
+  "name": "@notedude/core",
+  "version": "0.1.0",
+  "description": "Framework-agnostic domain core shared by NoteDude clients",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./local": "./src/adapters/local-file.ts"
+  },
+  "scripts": {
+    "test": "node --experimental-strip-types --test test/*.test.ts"
+  },
+  "engines": {
+    "node": ">=22.6"
+  },
+  "license": "MIT"
+}
