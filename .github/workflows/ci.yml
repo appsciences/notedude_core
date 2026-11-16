@@ -13,10 +13,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --ignore-scripts
+      # `prepare` builds dist/, exactly as it does when an app installs this package from git.
+      - run: npm install
       - name: Validate package metadata
         run: npm pkg get name version exports
-      - name: Unit and integration tests
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit and integration tests (pretest rebuilds dist/)
         run: npm test
 
   detect-e2e:

@@ -4,3 +4,6 @@ export * from "./query.ts";
 export * from "./service.ts";
 export * from "./share.ts";
 export * from "./tags.ts";
+export * from "./markdown/markdown.ts";
+export * from "./markdown/htmlPaste.ts";
+export * from "./markdown/attachments.ts";

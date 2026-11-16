@@ -22,4 +22,22 @@ const note = await service.create({ inheritedFromQuery: "#project planning" });
 const view = queryNotes(await repository.list(), "#project");
 ```
 
-Run focused validation with `npm test`.
+### Entry points
+
+| Import | What it is |
+| --- | --- |
+| `@notedude/core` | Domain core (notes, tags, query, actions, service) and the markdown engine (`parseNote`, shortcuts, rich-paste converter, attachment references). No DOM, no React. |
+| `@notedude/core/ui` | React widgets and design tokens (`NoteList`, `NoteContent`, `SearchBar`, `HelpOverlay`, `CommandKeypad`, theme…). React and React DOM are peer dependencies. Re-exports the markdown helpers and `getNoteTitle` so an app needs one import. |
+| `@notedude/core/local` | File-backed repository for Node. |
+
+### Installing in an app
+
+Installed straight from GitHub by tag — no registry, no token (the repository is public and MIT-licensed):
+
+```sh
+npm install github:appsciences/notedude_core#v0.2.0
+```
+
+`prepare` builds `dist/` during install, so a consumer needs nothing but `npm install`. Pin a tag, not a branch. React apps that transpile their own dependencies do not need to; the output is plain ESM.
+
+Run focused validation with `npm test` (it builds first).
