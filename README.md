@@ -40,4 +40,9 @@ npm install github:appsciences/notedude_core#v0.2.0
 
 `prepare` builds `dist/` during install, so a consumer needs nothing but `npm install`. Pin a tag, not a branch. React apps that transpile their own dependencies do not need to; the output is plain ESM.
 
-Run focused validation with `npm test` (it builds first).
+### Tests
+
+- `npm test` — unit and integration tests for the domain core, the markdown engine and the built entry points (builds first).
+- `cd e2e && npm ci && npx playwright test` — browser contract tests for the shared UI. `e2e/` renders a gallery of every widget (`e2e/src/gallery.tsx`) and drives it with Playwright: that each component renders, that colours come from the active theme, and that the test ids the apps rely on are emitted by the library. The apps keep their own behavioural suites; this one guards what they share, so a change to a shared widget is caught here before it reaches either app. Locally, `PW_CHROMIUM_PATH=/path/to/chromium` points Playwright at an installed browser.
+
+New shared behaviour gets its test here, next to the code, not in an app.
