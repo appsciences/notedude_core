@@ -7,7 +7,7 @@ on:
 
 jobs:
   core:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,7 +23,7 @@ jobs:
         run: npm test
 
   detect-e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       available: ${{ steps.detect.outputs.available }}
       directory: ${{ steps.detect.outputs.directory }}
@@ -46,7 +46,7 @@ jobs:
   e2e:
     needs: detect-e2e
     if: needs.detect-e2e.outputs.available == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: ${{ needs.detect-e2e.outputs.directory }}
